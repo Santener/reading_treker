@@ -6,6 +6,6 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setMinimumSize(1280, 850)
         self.setStyleSheet("QMainWindow"
-                           " {background-image: url(resources/main_window_background2.jpg);"
+                           " {background-image: url(resources/main_window_background3.png);"
                            " background-repeat: no repeat;"
                            "background-position: center;}")
