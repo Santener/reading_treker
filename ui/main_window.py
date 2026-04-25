@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import  QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from PySide6.QtCore import Qt
 
 from .title_bar import TitleBar
@@ -19,6 +19,8 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         layout.addWidget(TitleBar())
         layout.addStretch()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
         container.setLayout(layout)
         self.setCentralWidget(container)
 
