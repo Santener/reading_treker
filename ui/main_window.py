@@ -1,5 +1,7 @@
-from PySide6.QtWidgets import  QMainWindow
+from PySide6.QtWidgets import  QMainWindow, QVBoxLayout, QWidget
 from PySide6.QtCore import Qt
+
+from .title_bar import TitleBar
 
 
 class MainWindow(QMainWindow):
@@ -12,6 +14,13 @@ class MainWindow(QMainWindow):
                            " background-position: center;}")
 
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+
+        container = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(TitleBar())
+        layout.addStretch()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
 
 
 
