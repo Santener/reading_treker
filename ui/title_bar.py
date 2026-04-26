@@ -2,6 +2,11 @@ from PySide6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QStyle
 
 
 class TitleBar(QWidget):
+    _STYLES = {
+        "white": {"hover": "rgba(250, 250, 250, 0.2)", "pressed": "rgba(250, 250, 250, 0.3)"},
+        "red": {"hover": "rgba(230, 34, 34, 1)", "pressed": "rgba(250, 87, 75, 1)"},
+    }
+
     def __init__(self):
         super().__init__()
 
@@ -12,29 +17,10 @@ class TitleBar(QWidget):
         self.normal_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
         min_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
 
-        btn_exit = QPushButton()
-        btn_exit.setIcon(exit_icon)
-        btn_exit.clicked.connect(self.close_window)
-        btn_exit.setFixedSize(40, 40)
-        btn_exit.setStyleSheet("QPushButton { border-radius: 0px }"
-                               "QPushButton:hover {background-color: #e62222}"
-                               "QPushButton:pressed {background-color: #fa574b}")
+        btn_exit = self._create_button(exit_icon, self.close_window, "red")
+        self.btn_window_size = self._create_button(self.max_icon, self.change_window, "white")
+        btn_min = self._create_button(min_icon, self.min_window, "white")
 
-        self.btn_window_size = QPushButton()
-        self.btn_window_size.setIcon(self.max_icon)
-        self.btn_window_size.setFixedSize(40, 40)
-        self.btn_window_size.clicked.connect(self.change_window)
-        self.btn_window_size.setStyleSheet("QPushButton { border-radius: 0px }"
-                                           "QPushButton:hover {background-color: rgba(250, 250, 250, 0.2)}"
-                                           "QPushButton:pressed {background-color: rgba(250, 250, 250, 0.3)}")
-
-        btn_min = QPushButton()
-        btn_min.setIcon(min_icon)
-        btn_min.setFixedSize(40, 40)
-        btn_min.clicked.connect(self.min_window)
-        btn_min.setStyleSheet("QPushButton { border-radius: 0px }"
-                              "QPushButton:hover {background-color: rgba(250, 250, 250, 0.2)}"
-                              "QPushButton:pressed {background-color: rgba(250, 250, 250, 0.3)}")
         layout = QHBoxLayout()
         layout.addStretch()
         layout.addWidget(btn_min)
@@ -43,6 +29,21 @@ class TitleBar(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         self.setLayout(layout)
+
+    @staticmethod
+    def _create_button(icon, click_handler, style_key):
+        button = QPushButton()
+        button.setIcon(icon)
+        button.setFixedSize(40, 40)
+        button.clicked.connect(click_handler)
+        profile = TitleBar._STYLES[style_key]
+        hover = profile["hover"]
+        pressed = profile["pressed"]
+        button.setStyleSheet(f"QPushButton {{ border-radius: 0px; }}"
+                             f"QPushButton:hover {{background-color: {hover}; }} "
+                             f"QPushButton:pressed {{background-color: {pressed}; }}")
+
+        return button
 
     def close_window(self):
         self.window().close()
@@ -57,6 +58,3 @@ class TitleBar(QWidget):
 
     def min_window(self):
         self.window().showMinimized()
-
-
-
