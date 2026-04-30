@@ -1,0 +1,11 @@
+=================================BAGS=================================
+
+01. bag with _toggle_maximize in TitleBar (ui/title_bar.py)
+    how to get:
+    1. minimize window with, while it has max size
+    2. open window from windows taskbar
+    3. try to click on btn_window_size (make size of the window normal)
+    result: btn_window_size doesnt work
+    status: fixed
+
+

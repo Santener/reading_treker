@@ -2,25 +2,37 @@ from PySide6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QStyle
 
 
 class TitleBar(QWidget):
+    """Custom header-model. Top window menu."""
+
+    BAR_HEIGHT = 40
+    BUTTON_SIZE = 40
+
     _STYLES = {
         "white": {"hover": "rgba(250, 250, 250, 0.2)", "pressed": "rgba(250, 250, 250, 0.3)"},
         "red": {"hover": "rgba(230, 34, 34, 1)", "pressed": "rgba(250, 87, 75, 1)"},
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self.setFixedHeight(40)
+        self.setFixedHeight(self.BAR_HEIGHT)
 
+        # Made to prevent bag 01 for occurring
+        self._is_custom_maximized = False
+        self._normal_geometry = None
+
+        # icons
         exit_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
         self.max_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
         self.normal_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
         min_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
 
-        btn_exit = self._create_button(exit_icon, self.close_window, "red")
-        self.btn_window_size = self._create_button(self.max_icon, self.change_window, "white")
-        btn_min = self._create_button(min_icon, self.min_window, "white")
+        # buttons
+        btn_exit = self._create_button(exit_icon, self._close, "red")
+        self.btn_window_size = self._create_button(self.max_icon, self._toggle_maximize, "white")
+        btn_min = self._create_button(min_icon, self._minimize, "white")
 
+        # layout
         layout = QHBoxLayout()
         layout.addStretch()
         layout.addWidget(btn_min)
@@ -31,7 +43,8 @@ class TitleBar(QWidget):
         self.setLayout(layout)
 
     @staticmethod
-    def _create_button(icon, click_handler, style_key):
+    def _create_button(icon, click_handler, style_key) -> QPushButton:
+        """Create custom button for Titlebar."""
         button = QPushButton()
         button.setIcon(icon)
         button.setFixedSize(40, 40)
@@ -45,16 +58,33 @@ class TitleBar(QWidget):
 
         return button
 
-    def close_window(self):
+    def _close(self) -> None:
+        """close app"""
         self.window().close()
 
-    def change_window(self):
-        if self.window().isMaximized():
-            self.window().showNormal()
-            self.btn_window_size.setIcon(self.max_icon)
-        else:
-            self.window().showMaximized()
-            self.btn_window_size.setIcon(self.normal_icon)
+    def _toggle_maximize(self) -> None:
+        """toggle size of the window between normal and max"""
+        if self.window().isMinimized():
+            return
 
-    def min_window(self):
+        if self._is_custom_maximized:
+            self.window().showNormal()
+
+            if self._normal_geometry:
+                self.window().setGeometry(self._normal_geometry)
+
+            self._is_custom_maximized = False
+            self.btn_window_size.setIcon(self.max_icon)
+            print("Окно Максимальное")
+        else:
+            self._normal_geometry = self.window().geometry()
+            self.window().showMaximized()
+            self._is_custom_maximized = True
+            self.btn_window_size.setIcon(self.normal_icon)
+            print("Окно нормальное")
+
+    def _minimize(self) -> None:
+        """minimize window"""
         self.window().showMinimized()
+
+

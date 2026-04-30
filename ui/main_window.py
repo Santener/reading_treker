@@ -13,7 +13,9 @@ class MainWindow(QMainWindow):
                            " background-repeat: no repeat;"
                            " background-position: center;}")
 
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setWindowFlags(Qt.WindowType.Window |
+                            Qt.WindowType.FramelessWindowHint |
+                            Qt.WindowType.WindowMinMaxButtonsHint)
 
         container = QWidget()
         layout = QVBoxLayout()
