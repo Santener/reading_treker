@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QStyle
 from PySide6.QtCore import QPointF
+from PySide6.QtCore import Qt
 
 
 class TitleBar(QWidget):
@@ -16,13 +17,14 @@ class TitleBar(QWidget):
     def __init__(self) -> None:
         super().__init__()
 
+        # Titlebar size
         self.setFixedHeight(self.BAR_HEIGHT)
 
         self.mouse_position = None
 
         # Made to prevent bag 01 for occurring
-        self._is_custom_maximized = False
-        self._normal_geometry = None
+        self.is_custom_maximized = False
+        self.normal_geometry = None
 
         # icons
         exit_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
@@ -70,19 +72,19 @@ class TitleBar(QWidget):
         if self.window().isMinimized():
             return
 
-        if self._is_custom_maximized:
-            self.window().showNormal()
+        if self.is_custom_maximized:
 
-            if self._normal_geometry:
-                self.window().setGeometry(self._normal_geometry)
+            if self.normal_geometry:
+                self.window().setGeometry(self.normal_geometry)
 
-            self._is_custom_maximized = False
+            self.is_custom_maximized = False
             self.btn_window_size.setIcon(self.max_icon)
 
         else:
-            self._normal_geometry = self.window().geometry()
-            self.window().showMaximized()
-            self._is_custom_maximized = True
+            self.normal_geometry = self.window().geometry()
+            screen_geo = self.window().screen().availableGeometry()
+            self.window().setGeometry(screen_geo)
+            self.is_custom_maximized = True
             self.btn_window_size.setIcon(self.normal_icon)
 
     def _minimize(self) -> None:
@@ -95,7 +97,8 @@ class TitleBar(QWidget):
         print(f"окно здесь {self.window().pos()}")
 
     def mouseMoveEvent(self, event, /):
-        if not self._is_custom_maximized:
+        """Drag and Drop"""
+        if not self.is_custom_maximized:
             _x = QPointF(self.window().pos()).x() + (QPointF(event.position()).x() - self.mouse_position.x())
             _y = QPointF(self.window().pos()).y() + (QPointF(event.position()).y() - self.mouse_position.y())
             self.window().move(_x, _y)

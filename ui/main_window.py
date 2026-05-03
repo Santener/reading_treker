@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QApplication
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QScreen
+from PySide6.QtCore import Qt, QEvent, QTimer
 
 from .title_bar import TitleBar
 
@@ -13,6 +12,7 @@ class MainWindow(QMainWindow):
                            " {background-image: url(resources/main_window_background3.png);"
                            " background-repeat: no repeat;"
                            " background-position: center;}")
+
 
         self.setWindowFlags(Qt.WindowType.Window |
                             Qt.WindowType.FramelessWindowHint |
@@ -28,15 +28,13 @@ class MainWindow(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
+    @staticmethod
     def center_window(widget):
         screen = QApplication.primaryScreen().availableGeometry()
-
         size = widget.frameGeometry()
-
         size.moveCenter(screen.center())
 
         widget.move(size.topLeft())
-
 
 
 
