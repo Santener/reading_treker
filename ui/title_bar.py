@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QStyle
+from PySide6.QtCore import QPointF
 
 
 class TitleBar(QWidget):
@@ -16,6 +17,8 @@ class TitleBar(QWidget):
         super().__init__()
 
         self.setFixedHeight(self.BAR_HEIGHT)
+
+        self.mouse_position = None
 
         # Made to prevent bag 01 for occurring
         self._is_custom_maximized = False
@@ -75,16 +78,27 @@ class TitleBar(QWidget):
 
             self._is_custom_maximized = False
             self.btn_window_size.setIcon(self.max_icon)
-            print("Окно Максимальное")
+
         else:
             self._normal_geometry = self.window().geometry()
             self.window().showMaximized()
             self._is_custom_maximized = True
             self.btn_window_size.setIcon(self.normal_icon)
-            print("Окно нормальное")
 
     def _minimize(self) -> None:
         """minimize window"""
         self.window().showMinimized()
 
+    def mousePressEvent(self, event, /):
+        self.mouse_position = QPointF(event.position())
+        print(f"тыкнули здесь {event.position()}")
+        print(f"окно здесь {self.window().pos()}")
 
+    def mouseMoveEvent(self, event, /):
+        if not self._is_custom_maximized:
+            _x = QPointF(self.window().pos()).x() + (QPointF(event.position()).x() - self.mouse_position.x())
+            _y = QPointF(self.window().pos()).y() + (QPointF(event.position()).y() - self.mouse_position.y())
+            self.window().move(_x, _y)
+
+    def mouseDoubleClickEvent(self, event, /):
+        self._toggle_maximize()

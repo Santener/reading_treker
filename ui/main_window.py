@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QApplication
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QScreen
 
 from .title_bar import TitleBar
 
@@ -23,8 +24,19 @@ class MainWindow(QMainWindow):
         layout.addStretch()
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
+
         container.setLayout(layout)
         self.setCentralWidget(container)
+
+    def center_window(widget):
+        screen = QApplication.primaryScreen().availableGeometry()
+
+        size = widget.frameGeometry()
+
+        size.moveCenter(screen.center())
+
+        widget.move(size.topLeft())
+
 
 
 
