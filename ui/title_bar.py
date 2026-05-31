@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QStyle
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QHBoxLayout, QStyle
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 
 
 class TitleBar(QWidget):
@@ -15,6 +16,17 @@ class TitleBar(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
+
+        label_chip = QLabel()
+        chip = QPixmap("resources/chip7.0.png")
+        label_chip.setPixmap(chip)
+
+        label_emblem = QLabel()
+        emblem = QPixmap("resources/main_emblem3.0.png")
+        scaled_emblem = emblem.scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+
+        label_emblem.setPixmap(scaled_emblem)
+
 
         # Titlebar size
         self.setFixedHeight(self.BAR_HEIGHT)
@@ -41,6 +53,7 @@ class TitleBar(QWidget):
 
         # layout
         layout = QHBoxLayout()
+        layout.addWidget(label_chip)
         layout.addStretch()
         layout.addWidget(btn_min)
         layout.addWidget(self.btn_window_size)
@@ -48,6 +61,7 @@ class TitleBar(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         self.setLayout(layout)
+
 
     @staticmethod
     def _create_button(icon, click_handler, style_key) -> QPushButton:
