@@ -21,9 +21,9 @@ class TitleBar(QWidget):
         chip = QPixmap("resources/chip7.0.png")
         label_chip.setPixmap(chip)
 
-        label_emblem = QLabel()
+        label_emblem = QLabel(label_chip)
         emblem = QPixmap("resources/main_emblem3.0.png")
-        scaled_emblem = emblem.scaled(40, 40, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        scaled_emblem = emblem.scaled(30, 30, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
         label_emblem.setPixmap(scaled_emblem)
 
