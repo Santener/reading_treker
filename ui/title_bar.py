@@ -26,7 +26,18 @@ class TitleBar(QWidget):
         scaled_emblem = emblem.scaled(30, 30, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
         label_emblem.setPixmap(scaled_emblem)
+        label_emblem.setStyleSheet("""
+            padding-left: 10px;
+            padding-top: 5px;
+        """)
 
+        label_text_version = QLabel("Reading treker version 1.3", label_chip)
+        label_text_version.setStyleSheet("""
+            padding-left: 60px;
+            padding-top: 10px;
+            font: 20px;
+            font-family: 'Arial', sans-serif;
+        """)
 
         # Titlebar size
         self.setFixedHeight(self.BAR_HEIGHT)
